@@ -1,12 +1,12 @@
-"""URLs for the outlets app."""
-# from django.conf.urls import patterns, url
+"""URLs for the outlet app."""
+from django.conf.urls import patterns, url
 
-# from . import views
+from . import views
 
 
-# urlpatterns = patterns(
-#     '',
-#     url(r'^$',
-#         views.YourView.as_view(),
-#         name='outlets_default'),
-# )
+urlpatterns = patterns(
+    '',
+    url(r'', views.OutletsListView.as_view(), name='outlets_list'),
+    url(r'^(?P<slug>[\w|-]+)/$', views.OutletsListView.as_view(),
+        name='outlets_list'),
+)
