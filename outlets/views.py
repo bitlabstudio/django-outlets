@@ -13,11 +13,12 @@ class OutletsListView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         slug = kwargs.get('slug', '')
+        self.all_countries = models.OutletCountry.objects.all()
         if slug:
             self.country = get_object_or_404(models.OutletCountry, slug=slug)
         else:
             try:
-                first_country = models.OutletCountry.objects.all()[0]
+                first_country = self.all_countries[0]
             except IndexError:
                 raise Http404
             else:
@@ -27,3 +28,11 @@ class OutletsListView(ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(country=self.country)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(OutletsListView, self).get_context_data(**kwargs)
+        ctx.update({
+            'country': self.country,
+            'all_countries': self.all_countries,
+        })
+        return ctx
