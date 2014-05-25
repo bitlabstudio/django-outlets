@@ -1,7 +1,14 @@
 Django Outlets
-============
+==============
 
-A reusable Django app that allows you to manage and display your stores
+A reusable Django app that allows you to manage and display your stores.
+
+If you e.g. have different outlets, where you sell your products and those
+scattered across the world's surface, you can provide easy access to the
+customer about where they can find them.
+
+The app includes simple management of countries and outlets and a google map
+integration. For integration into the great ``django-cms``, see `cmsplugin-django-outlets <https://github.com/bitmazk/cmsplugin-django-outlets>`_.
 
 Installation
 ------------
@@ -12,13 +19,14 @@ To get the latest stable release from PyPi
 
     pip install django-outlets
 
+    # optional if you want cms integration
+    pip install cmsplugin-django-outlets
+
 To get the latest commit from GitHub
 
 .. code-block:: bash
 
     pip install -e git+git://github.com/bitmazk/django-outlets.git#egg=outlets
-
-TODO: Describe further installation steps (edit / remove the examples below):
 
 Add ``outlets`` to your ``INSTALLED_APPS``
 
@@ -27,6 +35,8 @@ Add ``outlets`` to your ``INSTALLED_APPS``
     INSTALLED_APPS = (
         ...,
         'outlets',
+        # again just if you want cms integration add the following
+        'cmsplugin_outlets',
     )
 
 Add the ``outlets`` URLs to your ``urls.py``
@@ -38,25 +48,23 @@ Add the ``outlets`` URLs to your ``urls.py``
         url(r'^outlets/', include('outlets.urls')),
     )
 
-Before your tags/filters are available in your templates, load them by using
-
-.. code-block:: html
-
-	{% load outlets_tags %}
-
-
 Don't forget to migrate your database
 
 .. code-block:: bash
 
     ./manage.py migrate outlets
+    # and another optional line. You guessed it. Only if you require it to work
+    # in django-cms.
+    ./manage.py migrate cmsplugin_outlets
 
 
 Usage
 -----
 
-TODO: Describe usage or point to docs. Also describe available settings and
-templatetags.
+TODO 1: Describe usage or point to docs. Also describe available settings and
+templatetags. Describe CMS integration, which is entirely optional, you know?
+TODO 2: ???
+TODO 3: Profit!
 
 
 Contribute
