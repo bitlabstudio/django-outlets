@@ -57,14 +57,36 @@ Don't forget to migrate your database
     # in django-cms.
     ./manage.py migrate cmsplugin_outlets
 
-
 Usage
 -----
 
-TODO 1: Describe usage or point to docs. Also describe available settings and
-templatetags. Describe CMS integration, which is entirely optional, you know?
-TODO 2: ???
-TODO 3: Profit!
+If you want to use the map, that comes with the default tempalte, you first
+need to hook up the Google maps API and the django-outlets
+``googlemap_outlets.js`` inside the template or your ``base.html``.
+
+.. code-block:: html
+
+    {% load static %}
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=en"></script>
+    <script type="text/javascript" src="{% static "outlets/js/googlemap_outlets.js" %}"></script>
+
+Check the Google API docs for further information
+https://developers.google.com/maps/documentation/javascript/tutorial?hl=de
+
+To be able to display your outlets on the map, every ``Outlet`` needs to have
+the ``lat`` and ``lon`` field set properly.
+
+
+CMS3 integration
+----------------
+
+If you installed and added the ``cmsplugin-django-outlets`` app as described
+above, you can go ahead and create a page with the "Outlets Apphook" to it.
+
+That's it.
+
+For more details on apphooks refer to the django-cms v3.x documentation itself.
 
 
 Contribute
