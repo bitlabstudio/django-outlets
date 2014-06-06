@@ -1,7 +1,7 @@
 """Views for the outlets app."""
 from django.core.urlresolvers import reverse
 from django.http import Http404
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 from django.shortcuts import get_object_or_404, redirect
 
 from . import models
@@ -36,3 +36,15 @@ class OutletsListView(ListView):
             'all_countries': self.all_countries,
         })
         return ctx
+
+
+class MapMarkerInfoboxAJAXView(DetailView):
+    """Renders the template for the map marker information bubble."""
+    model = models.Outlet
+    template_name = 'outlets/outlet_map_marker.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax():
+            raise Http404
+        return super(MapMarkerInfoboxAJAXView, self).dispatch(
+            request, *args, **kwargs)

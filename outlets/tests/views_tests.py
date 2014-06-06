@@ -32,3 +32,18 @@ class OutletsListViewTestCase(ViewRequestFactoryTestMixin, TestCase):
         self.country.delete()
         # shouldn't be callable if no country exists at all
         self.is_not_callable(kwargs={})
+
+
+class MapMarkerInfoboxAJAXViewTestCase(ViewRequestFactoryTestMixin, TestCase):
+    """Tests for the ``MapMarkerInfoboxAJAXView`` view class."""
+    view_class = views.MapMarkerInfoboxAJAXView
+
+    def get_view_kwargs(self):
+        return {'pk': self.outlet.pk}
+
+    def setUp(self):
+        self.outlet = factories.OutletFactory()
+
+    def test_view(self):
+        self.is_not_callable()
+        self.is_callable(ajax=True)

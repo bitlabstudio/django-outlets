@@ -1,5 +1,38 @@
 /* global google*/
 $(document).ready(function() {
+
+    function centerOnPosition(map, lat, lon, marker) {
+        // centers the map on a certain position
+        map.setCenter(new google.maps.LatLng(lat, lon));
+
+        // close all open info windows
+        for (var i=0; i<window.outletsGoogleMapInfoWindows.length; i++) {
+            window.outletsGoogleMapInfoWindows[i].close();
+        }
+
+        // trigger a click to open info window
+        google.maps.event.trigger(marker, 'click');
+    }
+
+    function createInfoWindow(url, map, marker) {
+        // fetches the content for the info window via ajax and adds the
+        // listener to the marker, that opens the window.
+
+        $.ajax({
+            url: url,
+            success: function(data) {
+                var infowindow = new google.maps.InfoWindow({
+                    content: data
+                });
+                // add the click listener to the marker to open the info window
+                google.maps.event.addListener(marker, 'click', function(){
+                    infowindow.open(map, marker);
+                });
+                window.outletsGoogleMapInfoWindows.push(infowindow);
+            }
+        });
+    }
+
     function initialize() {
         /*=====================================================================
          * Map initialization function
@@ -23,7 +56,10 @@ $(document).ready(function() {
         $outlet_detail_elements.each(function(){
             latlongs.push([
                 $(this).find('[name=lat]').val(),
-                $(this).find('[name=lon]').val()
+                $(this).find('[name=lon]').val(),
+                $(this).find('[name=title]').val(),
+                $(this).find('[name=map_marker_url]').val(),
+                $(this).find('[name=outlet]').val()
             ]);
         });
 
@@ -38,20 +74,24 @@ $(document).ready(function() {
         };
 
         // create the map instance
-        var map = new google.maps.Map($('[data-id=outletsGoogleMap]')[0], mapOptions);
+        window.outletsGoogleMap = new google.maps.Map($('[data-id=outletsGoogleMap]')[0], mapOptions);
 
         // is later filled with marker objects for the map
-        var markers = [];
+        window.outletsGoogleMapMarkers = [];
+
+        // holds all the info windows
+        window.outletsGoogleMapInfoWindows = [];
 
         // attach zoom event listener
         var zoomChangeBoundsListener = google.maps.event.addListener(
-            map, 'bounds_changed', function() {
+            window.outletsGoogleMap, 'bounds_changed', function() {
                 if (this.getZoom() > 15 && this.initialZoom === true) {
                     // Change max/min zoom here
                     this.setZoom(15);
                     this.initialZoom = false;
                 }
-            });
+            }
+        );
 
         // stop right here if there isn't any data
         if (!latlongs.length) {
@@ -64,41 +104,49 @@ $(document).ready(function() {
         }
 
         // center the map around all the gathered positions
-        map.setCenter(latlngbounds.getCenter());
+        window.outletsGoogleMap.setCenter(latlngbounds.getCenter());
 
         // zoom the map to match the positions, so all markers fit into the map
-        google.maps.event.addListener(map, 'zoom_changed', function() {
+        google.maps.event.addListener(window.outletsGoogleMap, 'zoom_changed', function() {
             google.maps.event.removeListener(zoomChangeBoundsListener);
         });
-        map.initialZoom = true;
-        map.fitBounds(latlngbounds);
+        window.outletsGoogleMap.initialZoom = true;
+        window.outletsGoogleMap.fitBounds(latlngbounds);
 
-        /*
-            function to create markers for a map
-            :param latlong_list: is an array of tuples in the format:
-                (latitude, longitude, hotel name, roomsxml_id
-            :param targetMap: is the google map object
-        */
+        // create the markers and the info windows
         for (i = 0; i < latlongs.length; i++) {
             if (latlongs[i][2] !== 'default') {
-                markers.push(
-                    new google.maps.Marker({
-                        position: new google.maps.LatLng(latlongs[i][0], latlongs[i][1]),
-                        map: map,
-                        title: latlongs[i][2],
-                    })
-                );
+                // create marker
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(latlongs[i][0], latlongs[i][1]),
+                    map: window.outletsGoogleMap,
+                    title: latlongs[i][2],
+                });
+                window.outletsGoogleMapMarkers.push(marker);
+                // create info window for each marker
+                createInfoWindow(latlongs[i][3], window.outletsGoogleMap, marker);
+                latlongs[i].push(marker);
             }
         }
+        // when clicking on a map marker center link as defined by the
+        // data-class=outletMapMarkerCenter attribute, center the map on the outlet's position
+        $(document).on('click', '[data-class=outletMapMarkerCenter]', function(e) {
+            var lat, lon,
+                marker;
+            var outlet_id = $(this).attr('data-id');
 
-        //TODO is this still required?
-        //$('.nav li').click(function() {
-            //window.setTimeout(function() {
-                //google.maps.event.trigger(map, 'resize');
-                //map.setCenter(latlngbounds.getCenter());
-            //}, 10)
-        //})
+            e.preventDefault();
 
+            for (i = 0; i < latlongs.length; i++) {
+                if (latlongs[i][4] === outlet_id) {
+                    lat = latlongs[i][0];
+                    lon = latlongs[i][1];
+                    marker = latlongs[i][5];
+                }
+            }
+
+            centerOnPosition(window.outletsGoogleMap, lat, lon, marker);
+        });
     }
 
     google.maps.event.addDomListener(window, 'load', initialize);

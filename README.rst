@@ -60,9 +60,10 @@ Don't forget to migrate your database
 Usage
 -----
 
-If you want to use the map, that comes with the default tempalte, you first
-need to hook up the Google maps API and the django-outlets
-``googlemap_outlets.js`` inside the template or your ``base.html``.
+If you want to use the map, that comes with the default tempalte and you
+override the template, keep in mind to to hook up the Google maps API and the
+django-outlets ``googlemap_outlets.js`` inside the template if you haven't
+added it globally already.
 
 .. code-block:: html
 
@@ -76,6 +77,12 @@ https://developers.google.com/maps/documentation/javascript/tutorial?hl=de
 
 To be able to display your outlets on the map, every ``Outlet`` needs to have
 the ``lat`` and ``lon`` field set properly.
+
+To customize the info boxes, that appear, when you click on the map markers,
+you can override the template at ``outlets/outlet_map_marker.html``.
+
+When customizing the ``outlets/outlet_list.html`` template, please note the
+comments inside the template.
 
 
 CMS3 integration
