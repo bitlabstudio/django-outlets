@@ -1,6 +1,8 @@
 === (ongoing) ===
 
 
+=== 0.2 ===
+
 - added customizable mapmarker infoboxes
 - added centering on map markers when clicking on outlet information
 
