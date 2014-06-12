@@ -1,4 +1,5 @@
 """Models for the outlets app."""
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -57,6 +58,9 @@ class OutletCountry(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('outlets_list', kwargs={'slug': self.slug})
 
     class Meta:
         ordering = ('position', 'name')

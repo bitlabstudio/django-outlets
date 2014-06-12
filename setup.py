@@ -38,6 +38,7 @@ dev_requires = [
 
 install_requires = [
     'django',
+    'django_libs>=1.55',
     'django-phonenumber-field',
     'south',
 ]

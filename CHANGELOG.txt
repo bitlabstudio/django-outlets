@@ -1,6 +1,9 @@
 === (ongoing) ===
 
 
+- using new django_libs map.js utils
+- added ``get_outlet_countries`` template tag
+
 === 0.2 ===
 
 - added customizable mapmarker infoboxes

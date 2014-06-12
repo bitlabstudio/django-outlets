@@ -70,6 +70,7 @@ added it globally already.
     {% load static %}
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=en"></script>
+    <script type="text/javascript" src="{% static "django_libs/js/maps.js" %}"></script>
     <script type="text/javascript" src="{% static "outlets/js/googlemap_outlets.js" %}"></script>
 
 Check the Google API docs for further information
@@ -94,6 +95,31 @@ above, you can go ahead and create a page with the "Outlets Apphook" to it.
 That's it.
 
 For more details on apphooks refer to the django-cms v3.x documentation itself.
+
+
+Template tags
+-------------
+
+get_outlet_countries
+++++++++++++++++++++
+
+This tag loads all outlet countries from within a template.
+
+Example:
+
+.. code-block:: html
+
+    {% load outlets_tags %}
+
+    {% get_outlet_countries as countries %}
+
+    <p>Visit our outlets in:</p>
+    <ul>
+        {% for country in countries}
+            <li><a href="{{ country.get_absolute_url }}">{{ country.name }}</a></li>
+        {% endfor %}
+    </ul>
+
 
 
 Contribute

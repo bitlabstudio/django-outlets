@@ -1,37 +1,7 @@
-/* global google*/
+/* global google */
+/* global createMarker, createInfoWindowAJAX, centerOnMarkerPosition */
+
 $(document).ready(function() {
-
-    function centerOnPosition(map, lat, lon, marker) {
-        // centers the map on a certain position
-        map.setCenter(new google.maps.LatLng(lat, lon));
-
-        // close all open info windows
-        for (var i=0; i<window.outletsGoogleMapInfoWindows.length; i++) {
-            window.outletsGoogleMapInfoWindows[i].close();
-        }
-
-        // trigger a click to open info window
-        google.maps.event.trigger(marker, 'click');
-    }
-
-    function createInfoWindow(url, map, marker) {
-        // fetches the content for the info window via ajax and adds the
-        // listener to the marker, that opens the window.
-
-        $.ajax({
-            url: url,
-            success: function(data) {
-                var infowindow = new google.maps.InfoWindow({
-                    content: data
-                });
-                // add the click listener to the marker to open the info window
-                google.maps.event.addListener(marker, 'click', function(){
-                    infowindow.open(map, marker);
-                });
-                window.outletsGoogleMapInfoWindows.push(infowindow);
-            }
-        });
-    }
 
     function initialize() {
         /*=====================================================================
@@ -74,17 +44,17 @@ $(document).ready(function() {
         };
 
         // create the map instance
-        window.outletsGoogleMap = new google.maps.Map($('[data-id=outletsGoogleMap]')[0], mapOptions);
+        window.GoogleMap = new google.maps.Map($('[data-id=GoogleMap]')[0], mapOptions);
 
         // is later filled with marker objects for the map
-        window.outletsGoogleMapMarkers = [];
+        window.GoogleMapMarkers = [];
 
         // holds all the info windows
-        window.outletsGoogleMapInfoWindows = [];
+        window.GoogleMapInfoWindows = [];
 
         // attach zoom event listener
         var zoomChangeBoundsListener = google.maps.event.addListener(
-            window.outletsGoogleMap, 'bounds_changed', function() {
+            window.GoogleMap, 'bounds_changed', function() {
                 if (this.getZoom() > 15 && this.initialZoom === true) {
                     // Change max/min zoom here
                     this.setZoom(15);
@@ -104,27 +74,23 @@ $(document).ready(function() {
         }
 
         // center the map around all the gathered positions
-        window.outletsGoogleMap.setCenter(latlngbounds.getCenter());
+        window.GoogleMap.setCenter(latlngbounds.getCenter());
 
         // zoom the map to match the positions, so all markers fit into the map
-        google.maps.event.addListener(window.outletsGoogleMap, 'zoom_changed', function() {
+        google.maps.event.addListener(window.GoogleMap, 'zoom_changed', function() {
             google.maps.event.removeListener(zoomChangeBoundsListener);
         });
-        window.outletsGoogleMap.initialZoom = true;
-        window.outletsGoogleMap.fitBounds(latlngbounds);
+        window.GoogleMap.initialZoom = true;
+        window.GoogleMap.fitBounds(latlngbounds);
 
         // create the markers and the info windows
         for (i = 0; i < latlongs.length; i++) {
             if (latlongs[i][2] !== 'default') {
                 // create marker
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(latlongs[i][0], latlongs[i][1]),
-                    map: window.outletsGoogleMap,
-                    title: latlongs[i][2],
-                });
-                window.outletsGoogleMapMarkers.push(marker);
+                var marker = createMarker(latlongs[i][0], latlongs[i][1], window.GoogleMap, latlongs[i][2]);
+                window.GoogleMapMarkers.push(marker);
                 // create info window for each marker
-                createInfoWindow(latlongs[i][3], window.outletsGoogleMap, marker);
+                createInfoWindowAJAX(latlongs[i][3], window.GoogleMap, marker);
                 latlongs[i].push(marker);
             }
         }
@@ -145,7 +111,7 @@ $(document).ready(function() {
                 }
             }
 
-            centerOnPosition(window.outletsGoogleMap, lat, lon, marker);
+            centerOnMarkerPosition(window.GoogleMap, lat, lon, marker);
         });
     }
 
