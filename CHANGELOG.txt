@@ -1,6 +1,8 @@
 === (ongoing) ===
 
 
+=== 0.3 ===
+
 - using new django_libs map.js utils
 - added ``get_outlet_countries`` template tag
 
