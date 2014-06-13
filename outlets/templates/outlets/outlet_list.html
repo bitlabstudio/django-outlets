@@ -28,6 +28,19 @@
                             <div class="col-md-3 outletDetails" data-class="outletDetails">
                                 {# data-id is required on the anchor, that centers the map on the related map marker. The data-class=outletMapMarkerCenter is required to identify the anchor, that centers the map. #}
                                 <a href="#" data-class="outletMapMarkerCenter" data-id="{{ outlet.pk }}"><h3>{{ outlet.name }}</h3></a>
+                                {% if outlet.outlet_type %}
+                                    <h4>{{ outlet.outlet_type }}</h4>
+                                {% endif %}
+                                {% if outlet.start_date or outlet.end_date %}
+                                    <p class="text-muted">
+                                        {% if outlet.start_date %}
+                                            <span>{% trans "Sale starts" %}: {{ outlet.start_date }}</span>
+                                        {% endif %}
+                                        {% if outlet.end_date %}
+                                            <span>{% trans "Sale ends" %}: {{ outlet.end_date }}</span>
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
                                 <p>{{ outlet.street}}</p>
                                 <p>{{ outlet.city }} {{ outlet.postal_code }}</p>
                                 {% if outlet.phone %}
