@@ -11,8 +11,8 @@ class OutletInline(admin.TabularInline):
 
 class OutletAdmin(admin.ModelAdmin):
     """Custom admin for the ``Outlet`` model."""
-    list_display = ['name', 'country', 'city', 'street', 'position', 'lat',
-                    'lon']
+    list_display = ['name', 'country', 'city', 'street', 'position',
+                    'start_date', 'end_date', 'outlet_type', 'lat', 'lon']
     search_fields = ['name']
 
 
