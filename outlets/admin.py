@@ -13,6 +13,7 @@ class OutletAdmin(admin.ModelAdmin):
     """Custom admin for the ``Outlet`` model."""
     list_display = ['name', 'country', 'city', 'street', 'position',
                     'start_date', 'end_date', 'outlet_type', 'lat', 'lon']
+    list_filter = ['country__name', 'outlet_type', ]
     search_fields = ['name']
 
 
