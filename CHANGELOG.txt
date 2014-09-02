@@ -1,9 +1,9 @@
 === (ongoing) ===
 
-
-=== 0.4 ===
+=== 0.4.X ===
 
 - added Outlet.start_date, end_date and outlet_type
+- added list_filter for Outlet admin
 
 === 0.3 ===
 
