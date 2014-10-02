@@ -123,7 +123,8 @@ class Outlet(models.Model):
 
     def clean(self):
         super(Outlet, self).clean()
-        if self.start_date > self.end_date:
+        if (self.start_date and self.end_date
+                and self.start_date > self.end_date):
             raise ValidationError(_(
                 'Start date cannot be later than end date.'))
 
