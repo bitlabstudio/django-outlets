@@ -2,6 +2,7 @@
 
 === 0.4.X ===
 
+- fixed clean method
 - added Outlet.start_date, end_date and outlet_type
 - added list_filter for Outlet admin
 
